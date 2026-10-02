@@ -67,6 +67,7 @@ pytest -q                                   # todos os testes
 python -m capacete.requisitos               # resumo dos requisitos
 python -m capacete.requisitos --markdown docs/requisitos_v1.md
 python modelos/verificacao/verificacao_casca_esferica.py
+python modelos/verificacao/visualizar_casca_esferica.py   # gráficos didáticos
 ```
 
 Ao alterar `requisitos/requisitos.yaml`, regenere `docs/requisitos_v1.md` e

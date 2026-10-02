@@ -33,7 +33,8 @@ def rigidez(u, v, w):
     return w["mu"] * dot(grad(u), grad(v)) * w.x[0]
 
 
-def fator_blindagem(a, b, mu_r, n=1, H0=1.0, R=2.0):
+def resolver(a, b, mu_r, n=1, H0=1.0, R=2.0):
+    """Resolve o problema; retorna a base FEM e o potencial psi."""
     s = np.r_[np.linspace(0, a, 8 * n + 1),
               np.linspace(a, b, 8 * n + 1)[1:],
               np.geomspace(b, R, 24 * n + 1)[1:]]
@@ -47,6 +48,11 @@ def fator_blindagem(a, b, mu_r, n=1, H0=1.0, R=2.0):
     psi = basis.zeros()
     psi[D] = -H0 * basis.doflocs[1, D]            # campo uniforme ao longe
     psi = solve(*condense(A, np.zeros_like(psi), x=psi, D=D))
+    return basis, psi
+
+
+def fator_blindagem(a, b, mu_r, n=1, H0=1.0, R=2.0):
+    basis, psi = resolver(a, b, mu_r, n, H0, R)
     dz = 0.5 * a                                  # campo interno uniforme
     v = basis.probes(np.array([[1e-6, 1e-6], [dz, -dz]])) @ psi
     H_in = (v[1] - v[0]) / (2 * dz)               # H_z = -d(psi)/dz
