@@ -40,7 +40,7 @@ def resolver(a, b, mu_r, n=1, H0=1.0, R=2.0):
               np.geomspace(b, R, 24 * n + 1)[1:]]
     m = malha_polar(s, 90 * n)
     basis = Basis(m, ElementTriP2())
-    rc = np.hypot(*m.p[:, m.t].mean(axis=1))      # raio do centroide
+    rc = np.hypot(*m.p)[m.t].mean(axis=0)         # raio médio dos vértices
     mu = np.where((rc > a) & (rc < b), mu_r, 1.0)
     mu_qp = mu[:, None] * np.ones_like(basis.X[0])[None, :]
     A = asm(rigidez, basis, mu=mu_qp)

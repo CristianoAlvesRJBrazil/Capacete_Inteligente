@@ -13,8 +13,8 @@ def test_erro_abaixo_de_1_por_cento(a, b, mu_r):
     assert sf == pytest.approx(fator_exato(a, b, mu_r), rel=0.01)
 
 
-def test_casca_fina_exige_refino():
-    a, b, mu_r = 0.0998, 0.10, 64000.0
-    ref = fator_exato(a, b, mu_r)
-    erro = [abs(fator_blindagem(a, b, mu_r, n=n) / ref - 1) for n in (1, 2)]
-    assert erro[1] < erro[0]
+def test_lamina_unica_de_fita():
+    """Uma única fita de 18 µm: a malha precisa reconhecer a casca fina."""
+    a, b, mu_r = 0.10 - 18e-6, 0.10, 70000.0
+    sf = fator_blindagem(a, b, mu_r, n=1)
+    assert sf == pytest.approx(fator_exato(a, b, mu_r), rel=0.01)
