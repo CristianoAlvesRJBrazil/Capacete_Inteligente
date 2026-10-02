@@ -1,9 +1,13 @@
 # Dependências fixadas da Fase 0, verificadas em ambiente limpo (Python 3.11).
-# Ferramentas das fases seguintes (gmsh, pandas, pyvista,
+# Ferramentas das fases seguintes (gmsh, pandas,
 # bfieldtools, magpylib) entram aqui com versão fixada quando adotadas.
 numpy==2.4.4
 scipy==1.16.2
 scikit-fem==12.0.2
 matplotlib==3.11.2
+pyvista==0.49.0
+vtk==9.7.1
+streamlit==1.64.0
+plotly==7.1.0
 PyYAML==6.0.3
 pytest==9.1.1

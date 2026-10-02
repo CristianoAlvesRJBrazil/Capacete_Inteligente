@@ -68,7 +68,20 @@ python -m capacete.requisitos               # resumo dos requisitos
 python -m capacete.requisitos --markdown docs/requisitos_v1.md
 python modelos/verificacao/verificacao_casca_esferica.py
 python modelos/verificacao/visualizar_casca_esferica.py   # gráficos didáticos
+python modelos/verificacao/visualizar_casca_esferica_3d.py  # cena 3D interativa
 ```
+
+## Interface gráfica (simulador didático)
+
+```bash
+streamlit run interface/app_casca_esferica.py
+```
+
+Abre no navegador um simulador da casca esférica: ajuste raio, espessura,
+permeabilidade, campo externo e refino da malha; veja o fator de blindagem, a
+comparação com a fórmula exata e com as metas do projeto, o mapa do campo, o
+perfil, a cena 3D interativa, as curvas de efeito dos parâmetros e exercícios
+guiados.
 
 Ao alterar `requisitos/requisitos.yaml`, regenere `docs/requisitos_v1.md` e
 rode os testes antes do commit.

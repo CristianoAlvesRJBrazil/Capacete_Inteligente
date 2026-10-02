@@ -27,9 +27,9 @@ SAIDA = RAIZ / "resultados" / "casca_esferica.png"
 A, B, MU_R = 0.09, 0.10, 1000.0          # raios interno e externo (m)
 
 
-def campo_no_plano(a, b, mu_r, L=0.2, N=150):
-    """|B|/B0 e componentes no plano (x, z), espelhando a solução em rho."""
-    basis, psi = resolver(a, b, mu_r, n=2)
+def campo_meridional(a, b, mu_r, L=0.2, N=150, n=2, R=2.0):
+    """Componentes Br e Bz (em unidades de B0) no semiplano rho >= 0."""
+    basis, psi = resolver(a, b, mu_r, n=n, R=R)
     m = basis.mesh
     malha = Triangulation(m.p[0], m.p[1], m.t.T)
     interp = LinearTriInterpolator(malha, psi[basis.nodal_dofs[0]])
@@ -41,21 +41,28 @@ def campo_no_plano(a, b, mu_r, L=0.2, N=150):
     dpsi_dz, dpsi_drho = np.gradient(PSI, z, rho)
     mu = np.where((np.hypot(RR, ZZ) > a) & (np.hypot(RR, ZZ) < b), mu_r, 1.0)
     Br, Bz = -mu * dpsi_drho, -mu * dpsi_dz          # B/B0, pois H0 = 1
+    return rho, z, Br, Bz
+
+
+def campo_no_plano(a, b, mu_r, L=0.2, N=150):
+    """Componentes de B/B0 no plano (x, z), espelhando a solução em rho."""
+    rho, z, Br, Bz = campo_meridional(a, b, mu_r, L, N)
     x = np.r_[-rho[::-1], rho]
     Bx = np.hstack([-Br[:, ::-1], Br])
     Bz = np.hstack([Bz[:, ::-1], Bz])
     return x, z, Bx, Bz
 
 
-def grafico_mapa(ax, fig, x, z, Bx, Bz, sf):
+def grafico_mapa(ax, fig, x, z, Bx, Bz, sf, raios=(A, B), limites=(1e-2, 20),
+                 titulo="(a) O metal desvia as linhas de campo"):
     modulo = np.hypot(Bx, Bz)
-    norma = LogNorm(vmin=1e-2, vmax=20)
+    norma = LogNorm(*limites)
     im = ax.pcolormesh(100 * x, 100 * z, modulo, norm=norma, cmap="magma",
                        shading="auto")
-    largura = 0.3 + 1.2 * norma(np.clip(modulo, 1e-2, 20))
+    largura = 0.3 + 1.2 * norma(np.clip(modulo, *limites))
     ax.streamplot(100 * x, 100 * z, Bx, Bz, color="white", density=1.3,
                   linewidth=largura, arrowsize=0.7)
-    for r in (A, B):
+    for r in raios:
         ax.add_patch(Circle((0, 0), 100 * r, fill=False, color="cyan", lw=1))
     ax.text(0, 0, f"campo\n{sf:.0f}× menor", color="white", ha="center",
             va="center", fontsize=10, weight="bold",
@@ -64,7 +71,7 @@ def grafico_mapa(ax, fig, x, z, Bx, Bz, sf):
     ax.set_aspect("equal")
     ax.set_xlabel("x (cm)")
     ax.set_ylabel("z (cm)")
-    ax.set_title("(a) O metal desvia as linhas de campo")
+    ax.set_title(titulo)
     fig.colorbar(im, ax=ax, label="|B| / B₀ (escala logarítmica)")
 
 
