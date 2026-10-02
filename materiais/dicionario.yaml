@@ -1,0 +1,62 @@
+# Dicionário de propriedades da base de materiais.
+# unidade: única unidade aceita em registros.csv (conversões vão em observacoes)
+# faixa: limites de plausibilidade usados pelo validador
+
+propriedades:
+  mu_r_inicial:
+    nome: Permeabilidade relativa inicial (campo baixo)
+    unidade: "-"
+    faixa: [1, 2.0e+6]
+  mu_r_max:
+    nome: Permeabilidade relativa máxima
+    unidade: "-"
+    faixa: [1, 2.0e+6]
+  mu_r:
+    nome: Permeabilidade relativa (tipo não especificado na fonte)
+    unidade: "-"
+    faixa: [1, 2.0e+6]
+  B_s:
+    nome: Indução (ou polarização) de saturação
+    unidade: T
+    faixa: [0.1, 2.5]
+  H_c:
+    nome: Coercividade
+    unidade: A/m
+    faixa: [1.0e-3, 1.0e+5]
+  razao_Br_Bs:
+    nome: Razão de quadratura Br/Bs
+    unidade: "-"
+    faixa: [0, 1]
+  espessura_fita:
+    nome: Espessura da fita ou lâmina
+    unidade: um
+    faixa: [1, 5000]
+  fator_empilhamento:
+    nome: Fator de empilhamento (laminação)
+    unidade: "-"
+    faixa: [0.3, 1]
+  densidade:
+    nome: Densidade
+    unidade: g/cm3
+    faixa: [1, 20]
+  resistividade:
+    nome: Resistividade elétrica
+    unidade: Ohm.m
+    faixa: [1.0e-8, 1.0e+4]
+  magnetostricao_sat:
+    nome: Magnetostrição de saturação
+    unidade: ppm
+    faixa: [-100, 100]
+  temperatura_curie:
+    nome: Temperatura de Curie
+    unidade: degC
+    faixa: [-273, 1200]
+  condutividade_termica:
+    nome: Condutividade térmica
+    unidade: W/(m.K)
+    faixa: [1.0e-3, 500]
+
+classes: [fe_nanocristalino, co_amorfo, fe_amorfo, permalloy, ferrita_mnzn,
+          aco_silicio]
+formas: [fita, placa, nucleo]
+tipos_dado: [medido, ficha_tecnica, digitalizado, calculado, citado]

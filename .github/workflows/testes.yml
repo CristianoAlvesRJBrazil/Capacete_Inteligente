@@ -22,5 +22,10 @@ jobs:
           python -m capacete.requisitos
           python -m capacete.requisitos --markdown /tmp/requisitos_v1.md
           diff -u docs/requisitos_v1.md /tmp/requisitos_v1.md
+      - name: Validar a base de materiais e regenerar o relatório
+        run: |
+          python -m capacete.materiais
+          python -m capacete.materiais --relatorio /tmp/materiais_cobertura.md
+          diff -u docs/materiais_cobertura.md /tmp/materiais_cobertura.md
       - name: Testes
         run: pytest -q

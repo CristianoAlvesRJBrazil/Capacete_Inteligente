@@ -1,0 +1,22 @@
+material_id,nome,classe,fabricante,grau,forma,processamento,fonte_principal,observacoes
+finemet_ft3m,FINEMET FT-3M,fe_nanocristalino,Hitachi Metals (Proterial),FT-3M,fita,nanocristalizado; laço B-H de quadratura média,hitachi_finemet_2010,
+finemet_ft3h,FINEMET FT-3H,fe_nanocristalino,Hitachi Metals (Proterial),FT-3H,fita,nanocristalizado; laço de alta quadratura,hitachi_finemet_2010,
+finemet_ft3l,FINEMET FT-3L,fe_nanocristalino,Hitachi Metals (Proterial),FT-3L,fita,nanocristalizado; laço de baixa quadratura,hitachi_finemet_2010,
+finemet_ft3s,FINEMET FT-3S,fe_nanocristalino,Hitachi Metals (Proterial),FT-3S,fita,nanocristalizado; maior permeabilidade da família,hitachi_finemet_2010,
+vitroperm_500f,VITROPERM 500 F,fe_nanocristalino,Vacuumschmelze (VAC),500 F,fita,nanocristalizado,vac_vitroperm_emc_2016,Permeabilidade ajustável pelo tratamento térmico (faixa de 15.000 a 150.000)
+fe_nano_shen2026,Fita Fe nanocristalina (Shen et al. 2026),fe_nanocristalino,-,experimental,fita,melt spinning e recozimento em três etapas,shen2026,Material de referência da revisão para a subcamada Fe
+metglas_2705m,Metglas 2705M,co_amorfo,Metglas Inc.,2705M,fita,como fundido ou recozido,metglas_2705m_2014,Curvas de magnetização inicial em figura na p. 2 (a digitalizar)
+vitrovac_6025,VITROVAC 6025,co_amorfo,Vacuumschmelze (VAC),6025,fita,-,vac_pht001_2002,Variante 6025 X indicada para blindagem sem tratamento térmico
+co_amorfo_alto_mu_hitachi,Co amorfo de alta permeabilidade (comparativo Hitachi),co_amorfo,não informado,-,fita,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals
+co_amorfo_alta_quadratura_hitachi,Co amorfo de alta quadratura (comparativo Hitachi),co_amorfo,não informado,-,fita,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals
+co_amorfo_msrmf_qian2026,Fita Co amorfa MS-RMF (Qian et al. 2026),co_amorfo,-,experimental,fita,recozimento em campo rotativo em múltiplas etapas,qian2026,Processo de escala laboratorial
+fe_amorfo_hitachi,Fe amorfo (comparativo Hitachi),fe_amorfo,não informado,-,fita,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals
+permalloy_80ni_hitachi,Permalloy 80% Ni de alta permeabilidade (comparativo Hitachi),permalloy,não informado,-,fita,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals
+mumetall,MUMETALL,permalloy,Vacuumschmelze (VAC),MUMETALL,fita,recozimento magnético final,vac_pht001_2002,Liga clássica de blindagem magnética (80% Ni)
+ultraperm_10,ULTRAPERM 10,permalloy,Vacuumschmelze (VAC),ULTRAPERM 10,fita,recozimento magnético final,vac_pht001_2002,
+vacoperm_100,VACOPERM 100,permalloy,Vacuumschmelze (VAC),VACOPERM 100,fita,recozimento magnético final,vac_pht001_2002,
+ferrita_mnzn_alto_mu_hitachi,Ferrita MnZn de alta permeabilidade (comparativo Hitachi),ferrita_mnzn,não informado,-,nucleo,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals
+ferrita_mnzn_baixa_perda_hitachi,Ferrita MnZn de baixa perda (comparativo Hitachi),ferrita_mnzn,não informado,-,nucleo,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals
+ferrita_n87_tdk,Ferrita MnZn N87 (TDK),ferrita_mnzn,TDK Electronics,SIFERRIT N87,nucleo,-,tdk_n87_2025,Ferrita de potência; incluída como referência de ferrita comercial
+ferrita_mnzn_liu2025,Ferrita Mn0.6Zn0.4Fe2O4 (Liu et al. 2025),ferrita_mnzn,-,experimental,placa,sinterizada,liuX2025,Placas de 150 x 150 x 3 mm usadas em câmara experimental
+aco_si_3_orientado_hitachi,Aço silício 3% orientado (comparativo Hitachi),aco_silicio,não informado,-,fita,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals

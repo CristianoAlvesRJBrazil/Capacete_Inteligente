@@ -1,0 +1,92 @@
+# Fontes da base de dados dos materiais.
+# Cada registro de registros.csv aponta para uma destas chaves (fonte_id).
+# Os PDFs não são versionados (direitos autorais); use as URLs.
+
+hitachi_finemet_2010:
+  referencia: >-
+    HITACHI METALS. Nanocrystalline soft magnetic material FINEMET.
+    Catálogo HL-FM9-E, jul. 2010.
+  url: https://www.hilltech.com/pdf/Hitachi/Datasheets/Hitachi%20Metals%20FINEMET%20material_sm.pdf
+  tipo: catalogo_fabricante
+  acesso: "2026-10-02"
+  observacoes: >-
+    Hitachi Metals é hoje Proterial. A tabela da p. 6 compara os graus FINEMET
+    com materiais convencionais, todos medidos pela Hitachi Metals em núcleos
+    toroidais sem corte.
+
+metglas_2705m_2014:
+  referencia: >-
+    METGLAS INC. Magnetic Alloy 2705M (cobalt-based): Technical Bulletin,
+    ref. 2705M08202014, 2014.
+  url: https://metglas.com/wp-content/uploads/2016/12/2705M-Technical-Bulletin.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-02"
+  observacoes: >-
+    Traz também curvas de magnetização inicial (p. 2) e laço de histerese DC
+    (p. 1) em figura, a digitalizar.
+
+vac_pht001_2002:
+  referencia: >-
+    VACUUMSCHMELZE. Soft Magnetic Materials and Semi-finished Products,
+    PHT-001, ed. 2002.
+  url: https://vacuumschmelze.com/03_Documents/Brochures/Product%20Information%20Soft%20Magnetic%20Materials%20and%20Semi-Finished%20Products.pdf
+  tipo: catalogo_fabricante
+  acesso: "2026-10-02"
+  observacoes: >-
+    Valores médios medidos em núcleos toroidais. A tabela 9 (p. 19) traz as
+    propriedades dinâmicas a 50 Hz; a tabela da p. 22, as físicas.
+
+vac_vitroperm_emc_2016:
+  referencia: >-
+    VACUUMSCHMELZE. Nanocrystalline VITROPERM: EMC Products, 2016.
+  url: https://gmw.com/wp-content/uploads/2019/03/NanocrystallineVITROPERM-EMC-Products-2016_01.pdf
+  tipo: catalogo_fabricante
+  acesso: "2026-10-02"
+
+tdk_n87_2025:
+  referencia: >-
+    TDK ELECTRONICS. Ferrites and accessories: SIFERRIT material N87.
+    Data sheet, jun. 2025.
+  url: https://www.tdk-electronics.tdk.com/download/528882/990c299b916e9f3eb7e44ad563b7f0b9/pdf-n87.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-02"
+
+shen2026:
+  referencia: >-
+    SHEN, P. et al. Fe-based nanocrystalline magnetic shielding cylinder with
+    subfemtotesla-level magnetic noise. Advanced Science, v. 13, n. 17,
+    art. e22435, 2026. DOI: 10.1002/advs.202522435.
+  tipo: artigo
+  observacoes: >-
+    Valores transcritos da revisão interna de materiais (v3.0), ainda não
+    conferidos no artigo original.
+
+qian2026:
+  referencia: >-
+    QIAN, Y. et al. Exceptional magnetic shielding via ultra-low-remanence
+    Co-based amorphous alloys engineered by atomic ordering. Materials
+    Research Letters, v. 14, n. 7, p. 792-801, 2026.
+    DOI: 10.1080/21663831.2026.2660809.
+  tipo: artigo
+  observacoes: >-
+    Valores transcritos da revisão interna de materiais (v3.0), ainda não
+    conferidos no artigo original.
+
+liuX2025:
+  referencia: >-
+    LIU, X. et al. Fe2O3 composition optimization for MnZn ferrite and its
+    magnetic noise evaluation for low-frequency magnetic shielding
+    applications. Journal of Alloys and Compounds, v. 1035, art. 181418, 2025.
+    DOI: 10.1016/j.jallcom.2025.181418.
+  tipo: artigo
+  observacoes: >-
+    Valores transcritos da revisão interna de materiais (v3.0), ainda não
+    conferidos no artigo original.
+
+metglas_site_2026:
+  referencia: >-
+    METGLAS INC. Magnetic Materials (especificações das ligas). Página do
+    fabricante.
+  url: https://metglas.com/magnetic-materials/
+  tipo: pagina_fabricante
+  acesso: "2026-10-02"

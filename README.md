@@ -17,7 +17,7 @@ O projeto responde a três perguntas:
 | Fase | Conteúdo | Situação |
 |---|---|---|
 | F0 | Requisitos e ambiente computacional | em andamento |
-| F1 | Base de dados dos materiais | — |
+| F1 | Base de dados dos materiais | base v0.1: 21 materiais, 150 registros |
 | F2 | Verificação e validação dos modelos | caso analítico pronto |
 | F3 | Blindagem passiva no casco aberto | — |
 | F4 | Resposta e ruído em 4–100 Hz | — |
@@ -35,7 +35,7 @@ Pendências da Fase 0: [`docs/pendencias_fase0.md`](docs/pendencias_fase0.md).
 requisitos/   requisitos.yaml (fonte única dos requisitos) e convencoes.md
 src/capacete/ código compartilhado (leitura e validação dos requisitos)
 modelos/      modelos de simulação; verificacao/ contém os casos analíticos
-materiais/    base de dados dos materiais (Fase 1)
+materiais/    base de dados dos materiais (Fase 1): materiais, registros, fontes
 resultados/   saídas geradas (não versionadas)
 docs/         relatórios consolidados
 tests/        testes automáticos
@@ -66,6 +66,7 @@ pip install -e .
 pytest -q                                   # todos os testes
 python -m capacete.requisitos               # resumo dos requisitos
 python -m capacete.requisitos --markdown docs/requisitos_v1.md
+python -m capacete.materiais --relatorio docs/materiais_cobertura.md
 python modelos/verificacao/verificacao_casca_esferica.py
 python modelos/verificacao/visualizar_casca_esferica.py   # gráficos didáticos
 python modelos/verificacao/visualizar_casca_esferica_3d.py  # cena 3D interativa

@@ -17,6 +17,8 @@ import streamlit as st  # noqa: E402
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "modelos" / "verificacao"))
 
+from capacete.materiais import carregar as carregar_materiais  # noqa: E402
+from capacete.materiais import formatar_valor  # noqa: E402
 from capacete.requisitos import carregar  # noqa: E402
 from verificacao_casca_esferica import fator_blindagem, fator_exato  # noqa: E402
 from visualizar_casca_esferica import campo_meridional, grafico_mapa  # noqa: E402
@@ -49,6 +51,11 @@ def metas():
     reqs = carregar()
     return (reqs["campo_externo"].valor, reqs["campo_residual_passivo"].valor,
             reqs["campo_residual_final"].valor)
+
+
+@st.cache_resource(show_spinner=False)
+def base_materiais():
+    return carregar_materiais()
 
 
 @st.cache_data(show_spinner=False)
@@ -240,6 +247,15 @@ def figura_varredura(x, fem, exato_x, exato_y, atual, titulo_x, log_x):
 
 
 # ------------------------------------------------------------------ barra lateral
+PERSONALIZADO = "personalizado"
+BASE = base_materiais()
+
+
+def nome_material(mid):
+    return ("Personalizado (escolher µr)" if mid == PERSONALIZADO
+            else BASE.materiais[mid].nome)
+
+
 def aplicar_exemplo():
     ex = EXEMPLOS.get(st.session_state.exemplo)
     if ex:
@@ -250,33 +266,67 @@ def aplicar_exemplo():
 
 B0_PADRAO, META_PASSIVA, META_FINAL = metas()
 for chave, valor in (("b_cm", 10.0), ("t_mm", 10), ("mu_r", 1000),
-                     ("n", 2), ("B0", float(B0_PADRAO)), ("densidade", 7.3)):
+                     ("n", 2), ("B0", float(B0_PADRAO)), ("densidade", 7.3),
+                     ("material", PERSONALIZADO), ("perm_tipo", "inicial"),
+                     ("n_laminas", 10)):
     st.session_state.setdefault(chave, valor)
 
+materiais_ordenados = sorted(BASE.simulaveis(), key=lambda m: (m.classe, m.nome))
 st.sidebar.header("Parâmetros")
-st.sidebar.selectbox("Exemplos prontos", ["Personalizado"] + list(EXEMPLOS),
-                     key="exemplo", on_change=aplicar_exemplo)
+st.sidebar.selectbox(
+    "Material", [PERSONALIZADO] + [m.material_id for m in materiais_ordenados],
+    key="material", format_func=nome_material,
+    help="Materiais da base de dados do projeto (materiais/), com a fonte de "
+         "cada valor, ou um material personalizado.")
+mat_id = st.session_state.material
+if mat_id == PERSONALIZADO:
+    st.sidebar.selectbox("Exemplos prontos", ["Personalizado"] + list(EXEMPLOS),
+                         key="exemplo", on_change=aplicar_exemplo)
+
+dados = None
 with st.sidebar.form("parametros"):
     b_cm = st.slider("Raio externo da esfera (cm)", 5.0, 20.0, step=0.5,
                      format="%.1f", key="b_cm",
                      help="Tamanho da casca de metal.")
-    t_mm = st.select_slider("Espessura do metal (mm)", ESPESSURAS_MM,
-                            key="t_mm",
-                            help="Uma fita nanocristalina tem cerca de 0,02 mm; "
-                                 "dez lâminas somam 0,2 mm.")
-    mu_r = st.select_slider("Permeabilidade relativa µr", PERMEABILIDADES,
-                            key="mu_r",
-                            help="Quanto o material conduz o campo magnético. "
-                                 "Ar = 1; ferrita MnZn ≈ 1.500; fitas "
-                                 "nanocristalinas ≈ 64.000.")
+    if mat_id == PERSONALIZADO:
+        t_mm = st.select_slider("Espessura do metal (mm)", ESPESSURAS_MM,
+                                key="t_mm",
+                                help="Uma fita nanocristalina tem cerca de "
+                                     "0,02 mm; dez lâminas somam 0,2 mm.")
+        mu_r = st.select_slider("Permeabilidade relativa µr", PERMEABILIDADES,
+                                key="mu_r",
+                                help="Quanto o material conduz o campo "
+                                     "magnético. Ar = 1; ferrita MnZn ≈ 1.500; "
+                                     "fitas nanocristalinas ≈ 64.000.")
+        densidade = st.number_input("Densidade do metal (g/cm³)", 1.0, 10.0,
+                                    step=0.1, key="densidade",
+                                    help="Fe nanocristalino ≈ 7,3; ferrita "
+                                         "MnZn ≈ 4,9.")
+    else:
+        tipo = st.radio("Permeabilidade usada", ["inicial", "maxima"],
+                        key="perm_tipo", horizontal=True,
+                        format_func=lambda t: ("inicial (conservadora)"
+                                               if t == "inicial"
+                                               else "máxima (otimista)"),
+                        help="A permeabilidade inicial vale para campos muito "
+                             "baixos; a máxima é atingida em campos maiores.")
+        dados = BASE.parametros_simulacao(mat_id, tipo)
+        valores = dados["valores"]
+        mu_r, densidade = valores["mu_r"], valores["densidade"]
+        if valores["espessura_fita"]:
+            laminas = st.number_input(
+                "Número de lâminas", 1, 2000, step=1, key="n_laminas",
+                help=f"Cada fita tem {br(valores['espessura_fita'], 0)} µm.")
+            t_mm = laminas * valores["espessura_fita"] / 1000
+            st.caption(f"Espessura total do metal: {br(t_mm, 3)} mm")
+        else:
+            t_mm = st.select_slider("Espessura do metal (mm)", ESPESSURAS_MM,
+                                    key="t_mm")
     B0 = st.number_input("Campo externo B₀ (µT)", 1.0, 200.0, step=1.0,
                          key="B0", help="O projeto usa 90 µT como pior caso.")
     n = st.select_slider("Refino da malha", [1, 2, 4], key="n",
                          help="Multiplica o número de divisões da malha. Mais "
                               "refino = resultado mais preciso e mais lento.")
-    densidade = st.number_input("Densidade do metal (g/cm³)", 1.0, 10.0,
-                                step=0.1, key="densidade",
-                                help="Fe nanocristalino ≈ 7,3; ferrita MnZn ≈ 4,9.")
     st.form_submit_button("Simular", type="primary", width="stretch")
 
 # ------------------------------------------------------------------ página
@@ -297,22 +347,65 @@ with st.spinner("Calculando o campo..."):
 erro = 100 * (sf / exato - 1)
 b_int = 1000 * B0 / sf                                     # nT
 a_cm = b_cm - t_mm / 10
-massa = 4 / 3 * np.pi * (b_cm**3 - a_cm**3) * densidade / 1000   # kg
+massa = (4 / 3 * np.pi * (b_cm**3 - a_cm**3) * densidade / 1000
+         if densidade else None)                           # kg
+b_metal = 1.5 * B0 * 1e-6 * (b_cm / 100) / (t_mm / 1000)  # T, estimativa
+b_sat = dados["valores"]["B_s"] if dados else None
 
-col = st.columns(6)
+if dados:
+    mat = BASE.materiais[mat_id]
+    st.markdown(f"**Material:** {mat.nome} — µr = {br(mu_r, 0)}"
+                + (f", Bs = {br(b_sat, 2)} T" if b_sat else ""))
+    with st.expander("Origem dos dados do material"):
+        origem = []
+        for prop, reg in dados["registros"].items():
+            if reg is None:
+                origem.append({"Propriedade": prop, "Valor": "sem dado"})
+                continue
+            fonte = " ".join(BASE.fontes[reg.fonte_id]["referencia"].split())
+            origem.append({"Propriedade": prop,
+                           "Valor": f"{formatar_valor(reg)} {reg.unidade}",
+                           "Condição": reg.condicao(), "Tipo": reg.tipo_dado,
+                           "Fonte": fonte, "Onde na fonte": reg.localizacao,
+                           "Registro": reg.id_registro})
+        st.dataframe(origem, hide_index=True)
+        for aviso in dados["avisos"]:
+            st.caption(f"⚠ {aviso}")
+        st.caption("Os valores de ficha técnica são medidos em núcleos "
+                   "toroidais, em condições que podem diferir das da blindagem. "
+                   "Os registros ainda aguardam conferência por uma segunda "
+                   "pessoa.")
+
+col = st.columns(4)
 col[0].metric("Fator de blindagem", br(sf),
               help="Quantas vezes o campo diminui no centro.")
 col[1].metric("Fórmula exata", br(exato))
 col[2].metric("Erro do computador", f"{br(erro, 3, sinal=True)} %",
               help="Diferença entre o FEM e a fórmula. Abaixo de 1% é bom.")
 col[3].metric("Atenuação", f"{br(20 * np.log10(sf))} dB")
-col[4].metric("Campo no centro", f"{br(b_int, 0)} nT",
+col = st.columns(4)
+col[0].metric("Campo no centro", f"{br(b_int, 0)} nT",
               help=f"B₀ = {B0:g} µT dividido pelo fator de blindagem.")
-col[5].metric("Massa do metal", f"{br(massa, 2)} kg")
+col[1].metric("Massa do metal", f"{br(massa, 2)} kg" if massa else "sem dado",
+              help="Volume da casca vezes a densidade do material.")
+col[2].metric("Indução no metal", f"{br(1000 * b_metal, 1)} mT",
+              help="Estimativa para casca fina: 1,5 × B₀ × raio / espessura. "
+                   "O metal concentra o fluxo desviado.")
+col[3].metric("Fração da saturação",
+              f"{br(100 * b_metal / b_sat, 0)} %" if b_sat else "sem dado",
+              help="Indução no metal dividida pela indução de saturação Bs.")
 
 if abs(erro) > 1:
     st.warning(f"O erro está acima de 1%: aumente o **refino da malha**. "
                f"Cascas finas precisam de malha mais fina.")
+if b_sat and b_metal >= b_sat:
+    st.error("O metal **satura**: a indução estimada supera Bs. A blindagem "
+             "real seria muito pior que a calculada. Use mais lâminas ou mais "
+             "espessura.")
+elif b_sat and b_metal > 0.5 * b_sat:
+    st.warning(f"O metal opera a {br(100 * b_metal / b_sat, 0)}% da saturação. "
+               "A permeabilidade cai antes de saturar, e este modelo linear "
+               "superestima a blindagem. Considere mais lâminas.")
 if b_int <= META_FINAL:
     st.success(f"Campo no centro de {br(b_int, 0)} nT: abaixo da meta final de "
                f"{META_FINAL} nT só com a blindagem passiva.")
@@ -321,16 +414,17 @@ elif b_int <= META_PASSIVA:
                f"{META_PASSIVA} nT. As bobinas ainda precisariam reduzir "
                f"{br(b_int / META_FINAL)} vezes para chegar a {META_FINAL} nT.")
 else:
-    st.warning(f"Campo no centro de {br(b_int, 0)} nT: acima da meta passiva de {META_PASSIVA} nT. Para "
-               f"{B0:g} µT, seria preciso um fator de blindagem de pelo menos "
-               f"{1000 * B0 / META_PASSIVA:.0f}.")
+    st.warning(f"Campo no centro de {br(b_int, 0)} nT: acima da meta passiva de "
+               f"{META_PASSIVA} nT. Para {B0:g} µT, seria preciso um fator de "
+               f"blindagem de pelo menos {1000 * B0 / META_PASSIVA:.0f}.")
 st.info("Esta é uma **esfera fechada**, o caso ideal. No capacete, as aberturas "
         "para o rosto e o pescoço deixam o campo entrar e reduzem muito a "
         "blindagem; isso é estudado no Passo 5 do guia.")
 
 lim = limites_de_cor(c, sf)
 abas = st.tabs(["Mapa do campo", "Perfil do campo", "Visão 3D",
-                "Efeito dos parâmetros", "Entenda e experimente"])
+                "Efeito dos parâmetros", "Base de materiais",
+                "Entenda e experimente"])
 
 with abas[0]:
     esq, dir_ = st.columns([3, 2])
@@ -399,6 +493,26 @@ with abas[3]:
             (t_mm, sf), "espessura do metal (mm)", log_x=False))
 
 with abas[4]:
+    st.markdown(f"A base tem **{len(BASE.materiais)} materiais** e "
+                f"**{len(BASE.registros)} registros**, cada um com fonte, "
+                "condição de medição e localização na fonte. A tabela mostra o "
+                "valor escolhido pelo simulador: menor frequência disponível e, "
+                "no empate, o valor mais conservador.")
+    tabela = []
+    for m in sorted(BASE.materiais.values(), key=lambda m: (m.classe, m.nome)):
+        def valor(*props):
+            return formatar_valor(BASE.escolher(m.material_id, props))
+        tabela.append({"Material": m.nome, "Classe": m.classe,
+                       "µr inicial": valor("mu_r_inicial", "mu_r"),
+                       "µr máxima": valor("mu_r_max"), "Bs (T)": valor("B_s"),
+                       "Densidade (g/cm³)": valor("densidade"),
+                       "Fita (µm)": valor("espessura_fita"),
+                       "Fonte": m.fonte_principal})
+    st.dataframe(tabela, hide_index=True, height=560)
+    st.caption("— indica lacuna na base. Os arquivos ficam em `materiais/` e "
+               "o relatório de cobertura em `docs/materiais_cobertura.md`.")
+
+with abas[5]:
     st.markdown(f"""
 ### O que está sendo simulado
 Uma esfera oca de metal é colocada num campo magnético uniforme. O computador
@@ -429,10 +543,11 @@ conferência se chama **verificação**.
          "fator aumenta?",
          "Cerca de 10 vezes (de 61 para 603). Para cascas de alta "
          "permeabilidade, o fator é quase proporcional a µr."),
-        ("Escolha *Fita Fe nanocristalina* e use refino 1. Qual é o erro? "
-         "Depois use refino 2.",
-         "Com refino 1 o erro é de cerca de −6%; com refino 2 cai para cerca "
-         "de 0,01%. Cascas finas precisam de malha fina."),
+        ("Escolha *Fita Fe nanocristalina* e compare o erro com refino 1 e "
+         "com refino 2. O resultado muda muito?",
+         "Não: o erro fica em torno de 0,01% nos dois casos. A malha deste "
+         "problema já acompanha a casca, mesmo fina. Em geometrias reais, como "
+         "o capacete, a convergência precisa ser verificada caso a caso."),
         ("Escolha *Ar (sem blindagem)*. O que acontece com o campo?",
          "O fator de blindagem é 1: o campo não muda, porque o ar não desvia "
          "as linhas."),
@@ -443,6 +558,13 @@ conferência se chama **verificação**.
          f"espessura de 1 mm. Lembre-se de que a esfera fechada é o caso "
          f"ideal."),
     ]
+    exercicios.append((
+        "Escolha o material *FINEMET FT-3M* com 1 lâmina. Observe a indução no "
+        "metal e a fração da saturação. Depois use 10 lâminas.",
+        "Com 1 lâmina de 18 µm, a indução estimada é de cerca de 750 mT, cerca "
+        "de 61% da saturação: o modelo linear deixa de valer. Com 10 lâminas, "
+        "cai para cerca de 75 mT (6%) e o fator de blindagem sobe de cerca de "
+        "9 para cerca de 85."))
     for i, (pergunta, resposta) in enumerate(exercicios, 1):
         st.markdown(f"**{i}.** {pergunta}")
         with st.expander("Ver resposta"):
