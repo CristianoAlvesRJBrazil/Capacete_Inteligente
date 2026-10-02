@@ -1,0 +1,216 @@
+# Requisitos de projeto da plataforma vestível OPM-MEG — versão 1 (Fase 0)
+#
+# Cada requisito tem: id, chave, parametro, valor, unidade, situacao,
+# justificativa, origem, fase_responsavel e objetivos.
+#   situacao: definido | provisorio | a_definir
+#   valor: número, intervalo [min, max] ou null (somente se a_definir)
+#   unidade: "-" para requisitos qualitativos
+#   fase_responsavel: fase em que o requisito é fixado ou verificado (F0–F8)
+#   objetivos: objetivos específicos atendidos (O1–O10)
+# Convenções de unidades, eixos e métricas: requisitos/convencoes.md
+
+versao: 1
+data: "2026-10-01"
+
+requisitos:
+
+  - id: R01
+    chave: campo_externo
+    parametro: Campo magnético externo de projeto
+    valor: 90
+    unidade: uT
+    situacao: provisorio
+    justificativa: >-
+      Condição conservadora de projeto, cerca de 40% acima do limite
+      geomagnético superior (~65 uT); sujeita à caracterização do ambiente
+      de aplicação.
+    origem: Objetivo O1; IGRF (Alken et al., 2021)
+    fase_responsavel: F0
+    objetivos: [O1]
+
+  - id: R02
+    chave: campo_residual_final
+    parametro: Campo residual nos locais dos OPMs (passivo + ativo)
+    valor: 30
+    unidade: nT
+    situacao: definido
+    justificativa: >-
+      Objetivo de projeto do desempenho integrado; margem de 40% abaixo do
+      campo de operação informado para o QZFM (R04).
+    origem: Objetivo O9
+    fase_responsavel: F7
+    objetivos: [O9]
+
+  - id: R03
+    chave: campo_residual_passivo
+    parametro: Campo residual nos locais dos OPMs após a blindagem passiva
+    valor: 400
+    unidade: nT
+    situacao: provisorio
+    justificativa: >-
+      Meta preliminar intermediária que subsidia o dimensionamento da
+      compensação ativa; viabilidade a verificar por simulação e ensaio.
+    origem: Objetivo O4
+    fase_responsavel: F3
+    objetivos: [O4]
+
+  - id: R04
+    chave: campo_operacao_opm
+    parametro: Campo ambiente máximo para operação do OPM (QZFM)
+    valor: 50
+    unidade: nT
+    situacao: provisorio
+    justificativa: >-
+      Valor informado pelo fabricante; confirmar na ficha técnica da
+      geração de sensor adotada.
+    origem: QuSpin, QZFM Gen-3 (acesso em 21/09/2026)
+    fase_responsavel: F0
+    objetivos: [O1, O9]
+
+  - id: R05
+    chave: faixa_dinamica_opm
+    parametro: Variação de campo admissível após o zeramento do OPM
+    valor: null
+    unidade: nT
+    situacao: a_definir
+    justificativa: >-
+      Define o limite das flutuações durante o movimento, distinto do campo
+      estático de operação (R04).
+    origem: Ficha técnica do QZFM
+    fase_responsavel: F0
+    objetivos: [O1, O9]
+
+  - id: R06
+    chave: banda_analise
+    parametro: Banda de análise das medições neurofisiológicas
+    valor: [4, 100]
+    unidade: Hz
+    situacao: definido
+    justificativa: >-
+      Variações e ruído avaliados separadamente da redução do campo
+      estático.
+    origem: Objetivo O6
+    fase_responsavel: F4
+    objetivos: [O6]
+
+  - id: R07
+    chave: gradiente_max
+    parametro: Gradiente máximo nos locais dos OPMs
+    valor: null
+    unidade: nT/cm
+    situacao: a_definir
+    justificativa: Limite compatível com a medição dos sinais biomagnéticos.
+    origem: Objetivos O1 e O9
+    fase_responsavel: F0
+    objetivos: [O1, O9]
+
+  - id: R08
+    chave: ruido_introduzido_max
+    parametro: Ruído magnético introduzido por materiais e bobinas
+    valor: null
+    unidade: fT/sqrt(Hz)
+    situacao: a_definir
+    justificativa: Comparado ao ruído intrínseco dos OPMs na banda R06.
+    origem: Objetivos O6 e O8
+    fase_responsavel: F0
+    objetivos: [O6, O8]
+
+  - id: R09
+    chave: massa_total
+    parametro: Massa total da plataforma
+    valor: 2.5
+    unidade: kg
+    situacao: provisorio
+    justificativa: >-
+      Proposta preliminar; o orçamento inclui sensores, bobinas, cabos,
+      estrutura e demais componentes.
+    origem: Plano de física computacional (Tabela 2)
+    fase_responsavel: F8
+    objetivos: [O10]
+
+  - id: R10
+    chave: aberturas
+    parametro: Geometria das aberturas facial e cervical
+    valor: null
+    unidade: "-"
+    situacao: a_definir
+    justificativa: >-
+      Definida pelos requisitos de uso; efeito magnético quantificado por
+      simulação; nenhuma porcentagem de área fixada a priori.
+    origem: Objetivo O5
+    fase_responsavel: F3
+    objetivos: [O5]
+
+  - id: R11
+    chave: protecao_rf_emi
+    parametro: Proteção RF/EMI do sistema de medição
+    valor: null
+    unidade: "-"
+    situacao: a_definir
+    justificativa: >-
+      Faixa de frequências, níveis e condições de ensaio mensuráveis (por
+      exemplo, MIL-STD-461G), ligados à proteção do sistema de medição.
+    origem: Objetivo O7
+    fase_responsavel: F5
+    objetivos: [O7]
+
+  - id: R12
+    chave: temperatura_contato_max
+    parametro: Temperatura máxima de contato com o escalpo
+    valor: null
+    unidade: degC
+    situacao: a_definir
+    justificativa: Inclui o calor dos OPMs e das bobinas.
+    origem: Objetivo O10
+    fase_responsavel: F0
+    objetivos: [O10]
+
+  - id: R13
+    chave: potencia_max
+    parametro: Potência máxima dissipada (OPMs e bobinas)
+    valor: null
+    unidade: W
+    situacao: a_definir
+    justificativa: Entrada do orçamento térmico e do dimensionamento das bobinas.
+    origem: Objetivo O10
+    fase_responsavel: F0
+    objetivos: [O8, O10]
+
+  - id: R14
+    chave: posicoes_opm
+    parametro: Número e posições dos OPMs
+    valor: null
+    unidade: "-"
+    situacao: a_definir
+    justificativa: >-
+      Define os volumes em que o campo residual e os gradientes são
+      avaliados.
+    origem: Objetivo O1
+    fase_responsavel: F0
+    objetivos: [O1]
+
+  - id: R15
+    chave: envelope_transversal
+    parametro: Diâmetro transversal do envelope inicial de modelagem
+    valor: 24
+    unidade: cm
+    situacao: provisorio
+    justificativa: >-
+      Envelope inicial de modelagem; a dimensão anteroposterior deve ser
+      definida por dados antropométricos, altura dos sensores e camadas.
+    origem: Revisão de materiais v3.0; Liu et al. (2026)
+    fase_responsavel: F0
+    objetivos: [O1, O5]
+
+  - id: R16
+    chave: distancia_sensor_escalpo
+    parametro: Distância entre a face sensora do OPM e o escalpo
+    valor: [3, 4]
+    unidade: mm
+    situacao: provisorio
+    justificativa: >-
+      Confirmar se a distância é medida até a face do sensor ou até o
+      centro da célula de vapor.
+    origem: Revisão de materiais v3.0
+    fase_responsavel: F0
+    objetivos: [O1]

@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "capacete-inteligente"
+version = "0.1.0"
+description = "Modelagem da blindagem passiva e da compensação ativa de uma plataforma craniana vestível para OPM-MEG"
+requires-python = ">=3.11"
+dependencies = ["numpy", "scipy", "scikit-fem", "PyYAML"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "modelos/verificacao"]
+testpaths = ["tests"]

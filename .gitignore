@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
+
+# Resultados gerados (versionar apenas relatórios consolidados em docs/)
+resultados/*
+!resultados/README.md
+*.msh
+*.vtu
+*.vtk
+*.h5
+*.xdmf
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.toc
+
+# Sistema
+.DS_Store
+.idea/
+.vscode/

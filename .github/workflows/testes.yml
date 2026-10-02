@@ -1,0 +1,26 @@
+name: testes
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Instalar dependências
+        run: |
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Validar requisitos e regenerar relatório
+        run: |
+          python -m capacete.requisitos
+          python -m capacete.requisitos --markdown /tmp/requisitos_v1.md
+          diff -u docs/requisitos_v1.md /tmp/requisitos_v1.md
+      - name: Testes
+        run: pytest -q
