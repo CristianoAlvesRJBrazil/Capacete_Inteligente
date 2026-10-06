@@ -43,6 +43,47 @@ tests/        testes automáticos
 
 ## Ambiente
 
+### Windows (Python 3.11)
+
+Abra o PowerShell na pasta do projeto. Confirme que o Python 3.11 está disponível
+no inicializador do Windows:
+
+```powershell
+py -3.11 --version
+```
+
+Se o comando `py` não estiver instalado, use o executável do Python 3.11
+diretamente. No Python Install Manager, o caminho costuma ser:
+
+```powershell
+$python311 = "$env:LOCALAPPDATA\Python\pythoncore-3.11-64\python.exe"
+& $python311 --version
+& $python311 -m venv .venv
+```
+
+Nesse caso, pule o comando `py -3.11 -m venv .venv` abaixo.
+
+Crie o ambiente virtual e instale as dependências do projeto:
+
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe -m pip install -e .
+```
+
+Inicie o simulador no navegador:
+
+```powershell
+.\.venv\Scripts\python.exe -m streamlit run interface/app_casca_esferica.py
+```
+
+Usar o executável dentro de `.venv` dispensa ativar o ambiente e evita
+problemas com a política de execução de scripts do PowerShell. Para abrir o
+projeto em outro terminal, repita esse último comando a partir da pasta do
+repositório. Se `py -3.11 --version` não funcionar, instale Python 3.11 e marque
+“Add Python to PATH” no instalador, ou use o Conda abaixo.
+
 Com conda:
 
 ```bash
@@ -51,13 +92,13 @@ conda activate capacete-inteligente
 pip install -e .
 ```
 
-Ou com venv (Python 3.11):
+Ou com venv no Linux/macOS (Python 3.11):
 
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
+python -m pip install -r requirements.txt
+python -m pip install -e .
 ```
 
 ## Uso
@@ -83,6 +124,20 @@ permeabilidade, campo externo e refino da malha; veja o fator de blindagem, a
 comparação com a fórmula exata e com as metas do projeto, o mapa do campo, o
 perfil, a cena 3D interativa, as curvas de efeito dos parâmetros e exercícios
 guiados.
+
+Na aba **Camadas sobrepostas**, escolha dois ou mais materiais da base e
+defina a espessura de cada camada, do interior para o exterior. As camadas
+formam uma única casca, sem espaço entre elas. O simulador calcula a blindagem
+conjunta por FEM e por uma solução exata que conserva potencial e fluxo em
+cada interface. Mostra também campo residual, massa, indução e saturação por
+camada. O raio externo, campo aplicado e refino vêm da barra lateral.
+Depois de simular, as seis abas internas apresentam **Mapa do campo**,
+**Perfil do campo**, **Visão 3D**, **Efeito dos parâmetros**, **Base de materiais**
+e **Entenda e experimente**, todas referentes à composição selecionada.
+Os gráficos usam a solução exata de todas as interfaces, preservando os raios
+reais das camadas. As curvas variam a espessura ou permeabilidade de uma camada
+e mostram o efeito de inverter a ordem dos materiais. As abas externas continuam
+disponíveis para a simulação de uma casca simples.
 
 Ao alterar `requisitos/requisitos.yaml`, regenere `docs/requisitos_v1.md` e
 rode os testes antes do commit.

@@ -35,13 +35,43 @@ def rigidez(u, v, w):
 
 def resolver(a, b, mu_r, n=1, H0=1.0, R=2.0):
     """Resolve o problema; retorna a base FEM e o potencial psi."""
-    s = np.r_[np.linspace(0, a, 8 * n + 1),
-              np.linspace(a, b, 8 * n + 1)[1:],
-              np.geomspace(b, R, 24 * n + 1)[1:]]
+    return resolver_camadas(a, [(b, mu_r)], n=n, H0=H0, R=R)
+
+
+def validar_camadas(a, camadas):
+    """Camadas contíguas: (raio externo em m, µr), do interior ao exterior."""
+    if not np.isfinite(a) or a <= 0 or not camadas:
+        raise ValueError("A cavidade deve ter raio positivo e ao menos uma camada.")
+    anterior = a
+    for raio, mu in camadas:
+        if not np.isfinite(raio) or raio <= anterior:
+            raise ValueError("Os raios das camadas devem ser finitos e crescentes.")
+        if not np.isfinite(mu) or mu < 1:
+            raise ValueError("A permeabilidade relativa deve ser finita e >= 1.")
+        anterior = raio
+
+
+def resolver_camadas(a, camadas, n=1, H0=1.0, R=2.0):
+    """Resolve todas as interfaces de uma casca composta no mesmo sistema FEM."""
+    validar_camadas(a, camadas)
+    b = camadas[-1][0]
+    if R <= b or n < 1 or int(n) != n:
+        raise ValueError("R deve superar o raio externo e n deve ser inteiro positivo.")
+    aneis = [np.linspace(0, a, 8 * n + 1)]
+    anterior = a
+    for raio, _ in camadas:
+        aneis.append(np.linspace(anterior, raio, 8 * n + 1)[1:])
+        anterior = raio
+    aneis.append(np.geomspace(b, R, 24 * n + 1)[1:])
+    s = np.concatenate(aneis)
     m = malha_polar(s, 90 * n)
     basis = Basis(m, ElementTriP2())
     rc = np.hypot(*m.p)[m.t].mean(axis=0)         # raio médio dos vértices
-    mu = np.where((rc > a) & (rc < b), mu_r, 1.0)
+    mu = np.ones_like(rc)
+    anterior = a
+    for raio, permeabilidade in camadas:
+        mu[(rc > anterior) & (rc < raio)] = permeabilidade
+        anterior = raio
     mu_qp = mu[:, None] * np.ones_like(basis.X[0])[None, :]
     A = asm(rigidez, basis, mu=mu_qp)
     D = basis.get_dofs(lambda x: np.hypot(x[0], x[1]) > 0.999 * R)
@@ -52,7 +82,11 @@ def resolver(a, b, mu_r, n=1, H0=1.0, R=2.0):
 
 
 def fator_blindagem(a, b, mu_r, n=1, H0=1.0, R=2.0):
-    basis, psi = resolver(a, b, mu_r, n, H0, R)
+    return fator_blindagem_camadas(a, [(b, mu_r)], n=n, H0=H0, R=R)
+
+
+def fator_blindagem_camadas(a, camadas, n=1, H0=1.0, R=2.0):
+    basis, psi = resolver_camadas(a, camadas, n=n, H0=H0, R=R)
     dz = 0.5 * a                                  # campo interno uniforme
     v = basis.probes(np.array([[1e-6, 1e-6], [dz, -dz]])) @ psi
     H_in = (v[1] - v[0]) / (2 * dz)               # H_z = -d(psi)/dz
@@ -61,6 +95,54 @@ def fator_blindagem(a, b, mu_r, n=1, H0=1.0, R=2.0):
 
 def fator_exato(a, b, mu_r):
     return 1 + 2 / 9 * (mu_r - 1) ** 2 / mu_r * (1 - (a / b) ** 3)
+
+
+def coeficientes_camadas(a, camadas):
+    """Solução exata: psi=(A*r + B/r²)cos(theta), com r normalizado por b.
+
+    Em cada interface, conserva psi e mu*dpsi/dr. A cavidade começa com
+    A=1, B=0; o A exterior resultante é o fator de blindagem. Os coeficientes
+    retornados são normalizados para campo aplicado unitário.
+    """
+    validar_camadas(a, camadas)
+    b = camadas[-1][0]
+    raios = np.array([a] + [r for r, _ in camadas]) / b
+    mus = [1.0] + [mu for _, mu in camadas] + [1.0]
+    coeficientes = [np.array([1.0, 0.0])]
+    for i, raio in enumerate(raios):
+        q = mus[i] / mus[i + 1]
+        transferencia = np.array([
+            [(2 + q) / 3, 2 * (1 - q) / (3 * raio**3)],
+            [raio**3 * (1 - q) / 3, (1 + 2 * q) / 3],
+        ])
+        coeficientes.append(transferencia @ coeficientes[-1])
+    fator = coeficientes[-1][0]
+    return fator, np.array(coeficientes) / fator
+
+
+def fator_exato_camadas(a, camadas):
+    return coeficientes_camadas(a, camadas)[0]
+
+
+def campo_exato_camadas(a, camadas, rho, z):
+    """B_rho/B0 e B_z/B0 da casca composta, para campo aplicado em +z.
+
+    Coordenadas em metros, com broadcasting NumPy. Em uma interface,
+    retorna o limite pelo material exterior; no centro usa o limite regular.
+    """
+    _, coeficientes = coeficientes_camadas(a, camadas)
+    rho, z = np.broadcast_arrays(np.asarray(rho, dtype=float),
+                                 np.asarray(z, dtype=float))
+    raio = np.hypot(rho, z)
+    limites = [a] + [r for r, _ in camadas]
+    regiao = np.searchsorted(limites, raio, side="right")
+    mu = np.array([1.] + [mu for _, mu in camadas] + [1.])[regiao]
+    A, C = coeficientes[regiao, 0], coeficientes[regiao, 1]
+    termo = np.divide(C, (raio / limites[-1])**3,
+                      out=np.zeros_like(raio), where=raio > 0)
+    cos = np.divide(z, raio, out=np.zeros_like(raio), where=raio > 0)
+    sen = np.divide(rho, raio, out=np.zeros_like(raio), where=raio > 0)
+    return -3 * mu * termo * sen * cos, mu * (A + termo * (1 - 3 * cos**2))
 
 
 if __name__ == "__main__":
