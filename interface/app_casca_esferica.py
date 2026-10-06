@@ -16,6 +16,8 @@ import streamlit as st  # noqa: E402
 
 RAIZ = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(RAIZ / "modelos" / "verificacao"))
+sys.path.insert(0, str(RAIZ / "interface"))
+from multicamadas import mostrar_camadas, trava_matplotlib  # noqa: E402
 
 from capacete.materiais import carregar as carregar_materiais  # noqa: E402
 from capacete.materiais import formatar_valor  # noqa: E402
@@ -333,7 +335,8 @@ with st.sidebar.form("parametros"):
 st.title("Simulador de blindagem magnética: casca esférica")
 st.caption("Passo 2 do guia do projeto. Escolha os parâmetros na barra lateral "
            "e clique em **Simular**. O computador resolve o campo pelo método "
-           "dos elementos finitos e compara com a fórmula exata.")
+           "dos elementos finitos e compara com a fórmula exata. Para combinar "
+           "materiais na mesma casca, abra a aba **Camadas sobrepostas**.")
 
 if t_mm / 10 >= 0.6 * b_cm:
     st.error("A espessura precisa ser menor que 60% do raio externo.")
@@ -424,13 +427,14 @@ st.info("Esta é uma **esfera fechada**, o caso ideal. No capacete, as aberturas
 lim = limites_de_cor(c, sf)
 abas = st.tabs(["Mapa do campo", "Perfil do campo", "Visão 3D",
                 "Efeito dos parâmetros", "Base de materiais",
-                "Entenda e experimente"])
+                "Entenda e experimente", "Camadas sobrepostas"])
 
 with abas[0]:
     esq, dir_ = st.columns([3, 2])
-    fig = figura_mapa(c, sf, lim)
-    esq.pyplot(fig)
-    plt.close(fig)
+    with trava_matplotlib():
+        fig = figura_mapa(c, sf, lim)
+        esq.pyplot(fig)
+        plt.close(fig)
     dir_.markdown(
         "**Como ler o mapa**\n\n"
         "- O corte mostra a esfera vista de lado; os círculos azuis são as "
@@ -569,3 +573,6 @@ conferência se chama **verificação**.
         st.markdown(f"**{i}.** {pergunta}")
         with st.expander("Ver resposta"):
             st.markdown(resposta)
+
+with abas[6]:
+    mostrar_camadas(BASE, materiais_ordenados, b_cm, B0, n, META_PASSIVA, META_FINAL)
