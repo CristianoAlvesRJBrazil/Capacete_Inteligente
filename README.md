@@ -68,6 +68,7 @@ python -m capacete.requisitos               # resumo dos requisitos
 python -m capacete.requisitos --markdown docs/requisitos_v1.md
 python -m capacete.materiais --relatorio docs/materiais_cobertura.md
 python modelos/verificacao/verificacao_casca_esferica.py
+python modelos/verificacao/casca_multicamada.py          # verificação multicamada
 python modelos/verificacao/visualizar_casca_esferica.py   # gráficos didáticos
 python modelos/verificacao/visualizar_casca_esferica_3d.py  # cena 3D interativa
 ```
@@ -78,11 +79,19 @@ python modelos/verificacao/visualizar_casca_esferica_3d.py  # cena 3D interativa
 streamlit run interface/app_casca_esferica.py
 ```
 
-Abre no navegador um simulador da casca esférica: ajuste raio, espessura,
-permeabilidade, campo externo e refino da malha; veja o fator de blindagem, a
-comparação com a fórmula exata e com as metas do projeto, o mapa do campo, o
-perfil, a cena 3D interativa, as curvas de efeito dos parâmetros e exercícios
-guiados.
+Abre no navegador um simulador de cascas esféricas com até quatro camadas.
+Cada camada tem seu material (da base de dados ou personalizado), sua espessura
+ou número de lâminas e o espaçamento até a próxima; há exemplos prontos com as
+sequências do projeto (Fe–Co, Fe–Fe, Fe–Fe–Co, Fe–Fe–Co–Co). O simulador
+mostra o fator de blindagem comparado com a solução exata para cascas
+concêntricas, o campo no centro frente às metas do projeto, a indução e a
+saturação em cada camada, a massa, o mapa do campo, o perfil, a cena 3D, as
+curvas de efeito dos parâmetros (inclusive do espaçamento), a comparação das
+sequências e exercícios guiados.
+
+O modelo multicamada e sua solução exata (matrizes de transferência) estão em
+`modelos/verificacao/casca_multicamada.py`; executá-lo imprime a tabela de
+verificação.
 
 Ao alterar `requisitos/requisitos.yaml`, regenere `docs/requisitos_v1.md` e
 rode os testes antes do commit.
