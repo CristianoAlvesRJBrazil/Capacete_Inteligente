@@ -62,6 +62,10 @@ class Registro:
     observacoes: str
 
     @property
+    def so_limite_superior(self) -> bool:
+        return self.valor is None and self.valor_min is None and self.valor_max is not None
+
+    @property
     def valor_efetivo(self) -> float:
         """Valor nominal; na falta dele, o limite conservador da faixa."""
         for v in (self.valor, self.valor_min, self.valor_max):
@@ -110,10 +114,11 @@ class Base:
     def escolher(self, material_id, propriedades):
         """Registro da primeira propriedade disponível: menor frequência
         informada, temperatura mais próxima de 25 °C e, no empate, o menor
-        valor (escolha conservadora)."""
+        valor (escolha conservadora). Registro que só traz limite superior
+        ("≤ X") fica por último: usá-lo como valor seria otimista."""
         def chave(r):
             dt = abs(r.temperatura_C - 25) if r.temperatura_C is not None else 0
-            return (r.frequencia_Hz is None, r.frequencia_Hz or 0, dt,
+            return (r.so_limite_superior, r.frequencia_Hz is None, r.frequencia_Hz or 0, dt,
                     r.valor_efetivo)
 
         for prop in propriedades:
@@ -134,7 +139,13 @@ class Base:
         avisos = []
         if mu is not None and mu.propriedade != ordem[0]:
             avisos.append(f"Sem '{ordem[0]}' na base; usado '{mu.propriedade}'.")
-        if mu is not None and mu.valor is None:
+        if mu is not None and mu.so_limite_superior:
+            avisos.append(f"A fonte só dá um limite superior de permeabilidade (≤ {mu.valor_max:g}); "
+                          "o valor usado é otimista.")
+        elif mu is not None and mu.valor is None and mu.valor_max is None:
+            avisos.append(f"A fonte dá um mínimo de permeabilidade (≥ {mu.valor_min:g}); "
+                          "usado esse mínimo (conservador).")
+        elif mu is not None and mu.valor is None:
             avisos.append("A fonte dá uma faixa de permeabilidade; usado o limite "
                           "inferior (conservador).")
         valores = {k: (r.valor_efetivo if r else None) for k, r in usados.items()}

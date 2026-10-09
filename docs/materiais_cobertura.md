@@ -2,9 +2,9 @@
 
 Gerado automaticamente a partir de `materiais/` por `python -m capacete.materiais --relatorio`. Não editar à mão.
 
-- Materiais: 24
-- Registros: 165 (165 ainda sem conferência por uma segunda pessoa)
-- Fontes: 11
+- Materiais: 33
+- Registros: 255 (255 ainda sem conferência por uma segunda pessoa)
+- Fontes: 20
 
 ## Propriedades essenciais por material
 
@@ -18,6 +18,7 @@ Valor na menor frequência disponível (escolha conservadora). — indica lacuna
 | Fita Co amorfa CA (Liang et al. 2026) | co_amorfo | 247800 | 913000 | 0.39 | — | 25 |
 | Fita Co amorfa MS-RMF (Qian et al. 2026) | co_amorfo | — | 400000 | — | — | — |
 | Metglas 2705M | co_amorfo | — | 290000 | 0.77 | 7.8 | 22 |
+| Metglas 2714A | co_amorfo | — | ≥ 80000 | 0.57 | 7.59 | — |
 | VITROVAC 6025 | co_amorfo | — | — | 0.53–0.59 | — | — |
 | Fe amorfo (comparativo Hitachi) | fe_amorfo | 5000 | — | 1.56 | — | 25 |
 | FINEMET FT-3H | fe_nanocristalino | 30000 | — | 1.23 | 7.3 | 18 |
@@ -26,13 +27,21 @@ Valor na menor frequência disponível (escolha conservadora). — indica lacuna
 | FINEMET FT-3S | fe_nanocristalino | 100000 | — | 1.23 | 7.3 | 18 |
 | Fita Fe nanocristalina (Shen et al. 2026) | fe_nanocristalino | — | — | 1.2 | — | 20 |
 | Fita Fe nanocristalina FN (Liang et al. 2026) | fe_nanocristalino | 38400 | 54400 | 1.25 | — | 25 |
-| VITROPERM 500 F | fe_nanocristalino | 15000–150000 | — | 1.2 | — | 20 |
+| VITROPERM 500 F | fe_nanocristalino | 15000–150000 | — | 1.2 | 7.35 | 20 |
+| VITROPERM 800 F (recozida em campo transversal) | fe_nanocristalino | — | 20000–200000 | 1.24 | 7.35 | 14–18 |
+| VITROPERM 800 R (recozida sem campo) | fe_nanocristalino | — | ≤ 600000 | 1.24 | 7.35 | 14–18 |
 | Ferrita Mn0.6Zn0.4Fe2O4 (Liu et al. 2025) | ferrita_mnzn | 1536 | — | — | — | — |
-| Ferrita MnZn MN80 (Ceramic Magnetics) | ferrita_mnzn | 2030 | — | — | — | — |
+| Ferrita MnZn 3E6 (Ferroxcube) | ferrita_mnzn | 12000 | — | 0.38 | 4.9 | — |
+| Ferrita MnZn MN60 (Ceramic Magnetics) | ferrita_mnzn | 6500 | 8500 | 0.45 | 4.8 | — |
+| Ferrita MnZn MN80 (Ceramic Magnetics) | ferrita_mnzn | 2030 | 5000 | 0.49 | 4.75 | — |
 | Ferrita MnZn N87 (TDK) | ferrita_mnzn | 2200 | — | 0.49 | 4.85 | — |
 | Ferrita MnZn de alta permeabilidade (comparativo Hitachi) | ferrita_mnzn | 10000 | — | 0.39 | — | — |
 | Ferrita MnZn de baixa perda (comparativo Hitachi) | ferrita_mnzn | 2500 | — | 0.52 | — | — |
+| Co-NETIC AA chapa (Magnetic Shield Corp.) | permalloy | ≥ 100000 | ≥ 400000 | 0.8 | 8.7 | 350 |
 | MUMETALL | permalloy | 60000 | 150000 | 0.8 | 8.7 | 200 |
+| MuMETAL chapa (Magnetic Shield Corp.) | permalloy | ≥ 75000 | — | 0.75 | 8.7 | 350 |
+| MuMETAL folha (Magnetic Shield Corp.) | permalloy | 50000 | 350000 | 0.74 | 8.7 | 100 |
+| Ni-Fe 80% Mo (MIL-N-14411C Composição 1): mínimos de norma | permalloy | ≥ 40000 | ≥ 200000 | — | — | — |
 | Permalloy 80% Ni de alta permeabilidade (comparativo Hitachi) | permalloy | 50000 | — | 0.74 | — | 25 |
 | ULTRAPERM 10 | permalloy | 150000 | 300000 | 0.74 | 8.7 | 100 |
 | VACOPERM 100 | permalloy | 100000 | 250000 | 0.74 | 8.7 | 100 |
@@ -48,7 +57,9 @@ Valor na menor frequência disponível (escolha conservadora). — indica lacuna
 - **FINEMET FT-3S**: permeabilidade relativa máxima
 - **Fe amorfo (comparativo Hitachi)**: permeabilidade relativa máxima, densidade
 - **Ferrita Mn0.6Zn0.4Fe2O4 (Liu et al. 2025)**: permeabilidade relativa máxima, indução (ou polarização) de saturação, densidade, espessura da fita ou lâmina
-- **Ferrita MnZn MN80 (Ceramic Magnetics)**: permeabilidade relativa máxima, indução (ou polarização) de saturação, densidade, espessura da fita ou lâmina
+- **Ferrita MnZn 3E6 (Ferroxcube)**: permeabilidade relativa máxima, espessura da fita ou lâmina
+- **Ferrita MnZn MN60 (Ceramic Magnetics)**: espessura da fita ou lâmina
+- **Ferrita MnZn MN80 (Ceramic Magnetics)**: espessura da fita ou lâmina
 - **Ferrita MnZn N87 (TDK)**: permeabilidade relativa máxima, espessura da fita ou lâmina
 - **Ferrita MnZn de alta permeabilidade (comparativo Hitachi)**: permeabilidade relativa máxima, densidade, espessura da fita ou lâmina
 - **Ferrita MnZn de baixa perda (comparativo Hitachi)**: permeabilidade relativa máxima, densidade, espessura da fita ou lâmina
@@ -57,8 +68,12 @@ Valor na menor frequência disponível (escolha conservadora). — indica lacuna
 - **Fita Fe nanocristalina (Shen et al. 2026)**: densidade
 - **Fita Fe nanocristalina FN (Liang et al. 2026)**: densidade
 - **Metglas 2705M**: permeabilidade relativa inicial (campo baixo)
+- **Metglas 2714A**: permeabilidade relativa inicial (campo baixo), espessura da fita ou lâmina
+- **Ni-Fe 80% Mo (MIL-N-14411C Composição 1): mínimos de norma**: indução (ou polarização) de saturação, densidade, espessura da fita ou lâmina
 - **Permalloy 80% Ni de alta permeabilidade (comparativo Hitachi)**: permeabilidade relativa máxima, densidade
-- **VITROPERM 500 F**: permeabilidade relativa máxima, densidade
+- **VITROPERM 500 F**: permeabilidade relativa máxima
+- **VITROPERM 800 F (recozida em campo transversal)**: permeabilidade relativa inicial (campo baixo)
+- **VITROPERM 800 R (recozida sem campo)**: permeabilidade relativa inicial (campo baixo)
 - **VITROVAC 6025**: permeabilidade relativa inicial (campo baixo), permeabilidade relativa máxima, densidade, espessura da fita ou lâmina
 
 ## Fontes
@@ -74,3 +89,12 @@ Valor na menor frequência disponível (escolha conservadora). — indica lacuna
 - `metglas_site_2026`: METGLAS INC. Magnetic Materials (especificações das ligas). Página do fabricante.
 - `liang2026`: LIANG, Y. et al. Multi-layer magnetic shields based on Fe-based nanocrystalline and Co-based amorphous ribbons. Materials, v. 19, n. 10, art. 1986, 2026. DOI: 10.3390/ma19101986.
 - `kornack2007`: KORNACK, T. W.; SMULLIN, S. J.; LEE, S.-K.; ROMALIS, M. V. A low-noise ferrite magnetic shield. Applied Physics Letters, v. 90, n. 22, art. 223501, 2007. DOI: 10.1063/1.2737357.
+- `msc_mumetal_chapa`: MAGNETIC SHIELD CORPORATION. MuMETAL stress annealed sheet: data sheet. Bensenville, IL, 2020.
+- `msc_mumetal_folha`: MAGNETIC SHIELD CORPORATION. MuMETAL fully annealed foil: data sheet. Bensenville, IL, 2020.
+- `msc_conetic_aa`: MAGNETIC SHIELD CORPORATION. Co-NETIC AA stress annealed sheet: data sheet. Bensenville, IL, 2020.
+- `metglas_2714a_2011`: METGLAS INC. Magnetic Alloy 2714A (cobalt-based): Technical Bulletin, ref. 2714A04202011, 2011.
+- `vac_vitroperm_800_500_2024`: VACUUMSCHMELZE. VITROPERM 800 / 500: datasheet. Hanau, 2024.
+- `ferroxcube_3e6_2002`: FERROXCUBE. 3E6 material specification: data sheet, 2002 Feb 01.
+- `cmi_mn80_2019`: CERAMIC MAGNETICS INC. MN80 Mn-Zn power ferrite: typical properties. Bethlehem, PA, 2019.
+- `cmi_mn60_2019`: CERAMIC MAGNETICS INC. MN60 general purpose, high permeability Mn-Zn ferrite: typical properties. Bethlehem, PA, 2019.
+- `mil_n_14411c_1977`: UNITED STATES. Department of Defense. MIL-N-14411C: Nickel-iron alloy, high magnetic permeability sheet, strip, rod, bar, and wire. 23 nov. 1977.

@@ -187,6 +187,17 @@ def test_temperatura_declarada(faixas):
     assert float(c["B_s"]["temperatura_C"]) == pytest.approx(26.85)
 
 
+def test_mesmo_valor_em_outra_condicao_nao_e_duplicata(tmp_path):
+    pasta = tmp_path / "materiais"
+    shutil.copytree(PASTA_PADRAO, pasta)
+    arq = tmp_path / "candidatos.csv"
+    linhas = [dict(_candidato(material_id="mumetall", propriedade="mu_r_max", valor="350000", unidade="-",
+                              fonte_id="shen2026"), frequencia_Hz=f) for f in ("0", "60", "60")]
+    _gravar(arq, linhas)
+    r = importar(arq, "Revisor Teste", pasta=pasta)
+    assert len(r["novos"]) == 2                                          # DC e 60 Hz; a 3.ª repete a 2.ª
+
+
 def test_importar_com_erro_nao_muda_nada(tmp_path):
     pasta = tmp_path / "materiais"
     shutil.copytree(PASTA_PADRAO, pasta)

@@ -17,7 +17,7 @@ O projeto responde a três perguntas:
 | Fase | Conteúdo | Situação |
 |---|---|---|
 | F0 | Requisitos e ambiente computacional | em andamento |
-| F1 | Base de dados dos materiais | base v0.2: 24 materiais, 165 registros; extração assistida dos PDFs |
+| F1 | Base de dados dos materiais | base v0.3: 33 materiais, 255 registros, 20 fontes (artigos, fichas técnicas e norma) |
 | F2 | Verificação e validação dos modelos | caso analítico pronto |
 | F3 | Blindagem passiva no casco aberto | — |
 | F4 | Resposta e ruído em 4–100 Hz | — |

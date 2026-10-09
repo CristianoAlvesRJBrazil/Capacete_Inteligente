@@ -63,3 +63,12 @@ def _copia_com_alteracao(tmp_path, alterar):
 def test_validador_rejeita_registro_invalido(tmp_path, alterar):
     with pytest.raises(BaseInvalida):
         carregar(_copia_com_alteracao(tmp_path, alterar))
+
+
+def test_limite_superior_nao_e_valor_conservador(base):
+    """'≤ 600.000' (VITROPERM 800 R) é teto, não valor: o simulador avisa que é otimista."""
+    p = base.parametros_simulacao("vitroperm_800r")
+    assert p["registros"]["mu_r"].so_limite_superior
+    assert any("limite superior" in a for a in p["avisos"])
+    # na norma, o mínimo garantido entra como piso conservador
+    assert base.parametros_simulacao("permalloy_mil_n_14411_comp1")["valores"]["mu_r"] == 40000

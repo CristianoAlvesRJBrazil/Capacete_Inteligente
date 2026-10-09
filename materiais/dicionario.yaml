@@ -59,4 +59,4 @@ propriedades:
 classes: [fe_nanocristalino, co_amorfo, fe_amorfo, permalloy, ferrita_mnzn,
           aco_silicio]
 formas: [fita, placa, nucleo]
-tipos_dado: [medido, ficha_tecnica, digitalizado, calculado, citado]
+tipos_dado: [medido, ficha_tecnica, norma, digitalizado, calculado, citado]

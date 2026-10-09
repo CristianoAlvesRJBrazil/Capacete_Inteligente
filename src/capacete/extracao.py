@@ -492,20 +492,40 @@ def referencia_de(meta: dict) -> str:
     return f"{autor} {meta.get('Titulo', '').strip()}. {meta.get('Ano', '')}." + (f" DOI: {doi}." if doi else "")
 
 
+def _identificar_pelo_doi(pdf: Path, meta_doi: dict):
+    """(metadados, DOI) pelo DOI impresso nas duas primeiras páginas: prefere
+    um DOI da lista de metadados; senão, o mais citado na página."""
+    try:
+        texto = " ".join(ler_pdf(pdf)[:2])
+    except (RuntimeError, subprocess.TimeoutExpired):
+        return {}, ""
+    achados = [_doi_norm(d) for d in re.findall(r"10\.\d{4,9}/[^\s\"<>]+", texto)]
+    for d in achados:
+        if d in meta_doi:
+            return meta_doi[d], d
+    if not achados:
+        return {}, ""
+    return {}, max(set(achados), key=achados.count)
+
+
 def documentos(pasta: Path, base) -> list:
     """Um Documento por PDF, com DOI, fonte e material padrão. Usa o pdfs.csv
     do agente pesquisador, se estiver na pasta; senão, procura o DOI no texto."""
-    meta = {}
+    linhas_meta = []
     arq_meta = pasta / "pdfs.csv"
     if arq_meta.exists():
         with open(arq_meta, encoding="utf-8-sig", newline="") as f:
-            meta = {l["Arquivo"]: l for l in csv.DictReader(f) if l.get("Arquivo")}
+            linhas_meta = list(csv.DictReader(f))
+    meta = {l["Arquivo"]: l for l in linhas_meta if l.get("Arquivo")}
+    meta_doi = {_doi_norm(l.get("DOI", "")): l for l in linhas_meta if l.get("DOI")}
     por_doi = dois_das_fontes(base.fontes)
     usadas = set(base.fontes)
     docs = []
     for pdf in sorted(pasta.glob("*.pdf")):
-        m = meta.get(pdf.name, {})
-        doc = Documento(arquivo=pdf.name, doi=_doi_norm(m.get("DOI", "")))
+        m, doi = meta.get(pdf.name, {}), ""
+        if not m:                                     # PDF baixado à mão, com outro nome
+            m, doi = _identificar_pelo_doi(pdf, meta_doi)
+        doc = Documento(arquivo=pdf.name, doi=_doi_norm(m.get("DOI", "")) or doi)
         doc.referencia = referencia_de(m) if m else ""
         if doc.doi and doc.doi in por_doi:
             doc.fonte_id = por_doi[doc.doi]
@@ -648,13 +668,20 @@ def importar(candidatos: Path, revisor: str, pasta: Path = PASTA_PADRAO, simular
     if not aprovadas:
         return resultado
     base = carregar(pasta)
-    ja = {(r.material_id, r.propriedade, r.valor, r.valor_min, r.valor_max, r.fonte_id) for r in base.registros}
     num = lambda t: float(t) if str(t).strip() else None  # noqa: E731
+
+    def chave(d):
+        """Mesmo valor da mesma fonte só é duplicata se a condição também for a mesma."""
+        return (d["material_id"].strip(), d["propriedade"].strip(), num(d["valor"]), num(d["valor_min"]),
+                num(d["valor_max"]), d["fonte_id"].strip(), num(d.get("frequencia_Hz", "")),
+                (d.get("excitacao") or "").strip(), num(d.get("temperatura_C", "")),
+                (d.get("processamento") or "").strip(), (d.get("amostra") or "").strip())
     with tempfile.TemporaryDirectory() as tmp:
         copia = Path(tmp) / "materiais"
         shutil.copytree(pasta, copia)
         with open(copia / "registros.csv", encoding="utf-8", newline="") as f:
             registros = list(csv.DictReader(f))
+        ja = {chave(r) for r in registros}
         por_id = {r["id_registro"]: r for r in registros}
         n, fontes_novas = _proximo_id(base.registros), {}
         for l in aprovadas:
@@ -664,22 +691,22 @@ def importar(candidatos: Path, revisor: str, pasta: Path = PASTA_PADRAO, simular
                 resultado["conferidos"].append(conf.group(1))
                 l["importado"] = f"conferiu {conf.group(1)}"
                 continue
-            chave = (l["material_id"].strip(), l["propriedade"].strip(), num(l["valor"]), num(l["valor_min"]),
-                     num(l["valor_max"]), l["fonte_id"].strip())
-            if chave in ja:
+            k = chave(l)
+            if k in ja:
                 l["importado"] = "já estava na base"
                 continue
-            ja.add(chave)
+            ja.add(k)
             if l["fonte_id"].strip() not in base.fontes and l["fonte_id"].strip() not in fontes_novas:
                 fontes_novas[l["fonte_id"].strip()] = _bloco_fonte(l["fonte_id"].strip(), l, revisor)
             rid = f"M-{n:04d}"
             n += 1
             obs = "; ".join(x for x in (l.get("observacoes", "").strip(),
-                                        f"extração assistida de {l['arquivo']}; aprovado por {revisor}") if x)
+                                        f"arquivo de origem: {l['arquivo']}; aprovado por {revisor}") if x)
             reg = dict.fromkeys(CAMPOS_REGISTRO, "")
             reg.update(id_registro=rid, **{k: l.get(k, "").strip() for k in
                                            ("material_id", "propriedade", "valor", "valor_min", "valor_max",
-                                            "unidade", "tipo_dado", "fonte_id", "localizacao") + _CONDICAO},
+                                            "unidade", "tipo_dado", "fonte_id", "localizacao", "amostra", "incerteza")
+                                           + _CONDICAO},
                        extraido_por=revisor, data_extracao=date.today().isoformat(), observacoes=obs)
             registros.append(reg)
             resultado["novos"].append(rid)

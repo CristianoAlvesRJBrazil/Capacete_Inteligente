@@ -116,3 +116,103 @@ kornack2007:
   observacoes: >-
     Versão de acesso aberto (arXiv) usada na leitura. Permeabilidade complexa
     da ferrita MN80 medida por impedância de quatro pontos (p. 3).
+
+msc_mumetal_chapa:
+  referencia: >-
+    MAGNETIC SHIELD CORPORATION. MuMETAL stress annealed sheet: data sheet.
+    Bensenville, IL, 2020.
+  url: https://www.magnetic-shield.com/content/MuMetal%20Stress%20Annealed%20Sheet%20Data.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Valores típicos, não garantidos; magnéticos medidos em anéis estampados
+    de chapa de 0,35 mm após recozimento final (perfection anneal).
+
+msc_mumetal_folha:
+  referencia: >-
+    MAGNETIC SHIELD CORPORATION. MuMETAL fully annealed foil: data sheet.
+    Bensenville, IL, 2020.
+  url: https://www.magnetic-shield.com/content/MuMetal%20Fully%20Annealed%20Foil%20Data.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Valores típicos; magnéticos medidos em toroide de folha de 0,1 mm após
+    recozimento final.
+
+msc_conetic_aa:
+  referencia: >-
+    MAGNETIC SHIELD CORPORATION. Co-NETIC AA stress annealed sheet: data
+    sheet. Bensenville, IL, 2020.
+  url: https://www.magnetic-shield.com/content/Co-NETIC%20AA%20Stress%20Annealed%20Sheet%20Data.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Valores típicos; magnéticos medidos em anéis estampados de chapa de 0,35
+    mm após recozimento final.
+
+metglas_2714a_2011:
+  referencia: >-
+    METGLAS INC. Magnetic Alloy 2714A (cobalt-based): Technical Bulletin,
+    ref. 2714A04202011, 2011.
+  url: https://metglas.com/wp-content/uploads/2016/12/2714A-Technical-Bulletin.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Tabelas de propriedades físicas e magnéticas na p. 1.
+
+vac_vitroperm_800_500_2024:
+  referencia: >-
+    VACUUMSCHMELZE. VITROPERM 800 / 500: datasheet. Hanau, 2024.
+  url: https://www.vacuumschmelze.com/03_Documents/Brochures/Datasheet%20VITROPERM%20500%20-%20800.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Valores típicos, não fazem parte de especificação (nota 1 da ficha).
+    VITROPERM 800 e 500 são a mesma liga (VP 800).
+
+ferroxcube_3e6_2002:
+  referencia: >-
+    FERROXCUBE. 3E6 material specification: data sheet, 2002 Feb 01.
+  url: https://sy-dep-epc-lpc.web.cern.ch/components/datasheets/epc-lpc%20(converters)/3E6%20MATERIAL%20(FERROXCUBE).pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Cópia hospedada pelo CERN; medido em núcleos toroidais Ø14 x Ø9 x 5 mm
+    sinterizados, sem retífica. Conferir se a Ferroxcube publicou revisão
+    mais nova.
+
+cmi_mn80_2019:
+  referencia: >-
+    CERAMIC MAGNETICS INC. MN80 Mn-Zn power ferrite: typical properties.
+    Bethlehem, PA, 2019.
+  url: https://www.magneticsgroup.com/wp-content/uploads/2019/09/MN80-ISO-WEB-DATA.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Ensaios a 10 kHz e 22 °C; Bs a 1 kHz e 20 Oe; Br e Hc a 1 kHz e 5 Oe. A
+    Ceramic Magnetics hoje faz parte do Magnetics Group.
+
+cmi_mn60_2019:
+  referencia: >-
+    CERAMIC MAGNETICS INC. MN60 general purpose, high permeability Mn-Zn
+    ferrite: typical properties. Bethlehem, PA, 2019.
+  url: https://www.magneticsgroup.com/wp-content/uploads/2019/09/MN60-ISO-WEB-DATA.pdf
+  tipo: ficha_tecnica
+  acesso: "2026-10-09"
+  observacoes: >-
+    Ensaios a 10 kHz e 22 °C; Bs a 20 Oe; Br e Hc a 5 Oe. A ficha cita
+    blindagem entre as aplicações.
+
+mil_n_14411c_1977:
+  referencia: >-
+    UNITED STATES. Department of Defense. MIL-N-14411C: Nickel-iron alloy,
+    high magnetic permeability sheet, strip, rod, bar, and wire. 23 nov.
+    1977.
+  url: https://everyspec.com/MIL-SPECS/MIL-SPECS-MIL-N/MIL-N-14411C_42250/
+  tipo: norma
+  acesso: "2026-10-09"
+  observacoes: >-
+    Especificação pública. Tabela I (p. 2): composição; Tabela III (p. 5):
+    mínimos DC; Tabela IV (p. 6): mínimos AC a 60 Hz por espessura. MuMETAL
+    e Co-NETIC declaram atender à Composição 1. ASTM A753 e IEC 60404-8-6
+    são pagas e não foram consultadas.

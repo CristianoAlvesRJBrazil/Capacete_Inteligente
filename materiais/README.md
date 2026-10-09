@@ -21,8 +21,10 @@ O relatório de cobertura, com as lacunas, fica em
 - Valor convertido de unidade guarda o valor original em `observacoes`.
 - Faixas (por exemplo, "15.000 a 150.000") vão em `valor_min` e `valor_max`;
   limites ("< 3 A/m") usam só um deles.
-- `tipo_dado`: `ficha_tecnica`, `medido`, `digitalizado`, `calculado` ou
-  `citado` (valor transcrito de outra fonte, ainda não conferido no original).
+- `tipo_dado`: `ficha_tecnica`, `norma`, `medido`, `digitalizado`, `calculado`
+  ou `citado` (valor transcrito de outra fonte, ainda não conferido no original).
+  `norma` é um limite garantido por especificação (por exemplo, MIL-N-14411C):
+  mínimos vão em `valor_min` e máximos em `valor_max`.
 - `conferido_por` só é preenchido depois que uma segunda pessoa confere o
   registro na fonte original.
 - Os PDFs das fontes não são versionados; use as URLs de `fontes.yaml`.
@@ -32,7 +34,8 @@ O relatório de cobertura, com as lacunas, fica em
 Para cada material, `capacete.materiais.Base.parametros_simulacao` escolhe o
 registro na menor frequência informada, na temperatura mais próxima de 25 °C e,
 no empate, o menor valor (escolha conservadora). Quando a fonte dá uma faixa,
-usa o limite inferior. Os avisos e os registros usados aparecem no simulador.
+usa o limite inferior. Um registro que só traz limite superior ("≤ X") fica por
+último e, se for o único, o simulador avisa que o valor é otimista. Os avisos e os registros usados aparecem no simulador.
 
 ## Tabela de validação
 
