@@ -20,3 +20,6 @@ ferrita_mnzn_baixa_perda_hitachi,Ferrita MnZn de baixa perda (comparativo Hitach
 ferrita_n87_tdk,Ferrita MnZn N87 (TDK),ferrita_mnzn,TDK Electronics,SIFERRIT N87,nucleo,-,tdk_n87_2025,Ferrita de potência; incluída como referência de ferrita comercial
 ferrita_mnzn_liu2025,Ferrita Mn0.6Zn0.4Fe2O4 (Liu et al. 2025),ferrita_mnzn,-,experimental,placa,sinterizada,liuX2025,Placas de 150 x 150 x 3 mm usadas em câmara experimental
 aco_si_3_orientado_hitachi,Aço silício 3% orientado (comparativo Hitachi),aco_silicio,não informado,-,fita,-,hitachi_finemet_2010,Material genérico da tabela comparativa da Hitachi Metals
+fe_nano_liang2026,Fita Fe nanocristalina FN (Liang et al. 2026),fe_nanocristalino,Ningbo B Plus New Material Technology,não informado,fita,nanocristalizada (comercial),liang2026,Subcamada Fe das blindagens multicamada FN/CA do artigo
+co_amorfo_liang2026,Fita Co amorfa CA (Liang et al. 2026),co_amorfo,produção própria (NIMTE),tipo 6025Z,fita,não informado,liang2026,O artigo a descreve como fita 6025Z (p. 2) e como produção própria (p. 3)
+ferrita_mn80_ceramic,Ferrita MnZn MN80 (Ceramic Magnetics),ferrita_mnzn,Ceramic Magnetics Inc.,MN80,placa,sinterizada,kornack2007,Material da blindagem de ferrita de Kornack et al. 2007 (cilindro de 10 cm de diâmetro)

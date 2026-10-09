@@ -4,5 +4,6 @@ channels:
 dependencies:
   - python=3.11
   - pip
+  - poppler        # pdftotext, usado por capacete.extracao
   - pip:
       - -r requirements.txt

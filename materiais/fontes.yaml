@@ -90,3 +90,29 @@ metglas_site_2026:
   url: https://metglas.com/magnetic-materials/
   tipo: pagina_fabricante
   acesso: "2026-10-02"
+
+liang2026:
+  referencia: >-
+    LIANG, Y. et al. Multi-layer magnetic shields based on Fe-based
+    nanocrystalline and Co-based amorphous ribbons. Materials, v. 19, n. 10,
+    art. 1986, 2026. DOI: 10.3390/ma19101986.
+  url: https://doi.org/10.3390/ma19101986
+  tipo: artigo
+  acesso: "2026-10-09"
+  observacoes: >-
+    Acesso aberto (CC BY). Tabela 1 (p. 5): permeabilidades inicial e máxima,
+    Bs e Hc das fitas FN e CA; a condição de medição não é declarada. Fig. 3
+    (p. 5): SEmax de cilindros de 1 a 3 camadas (70 mm x 300 mm), dado de
+    validação.
+
+kornack2007:
+  referencia: >-
+    KORNACK, T. W.; SMULLIN, S. J.; LEE, S.-K.; ROMALIS, M. V. A low-noise
+    ferrite magnetic shield. Applied Physics Letters, v. 90, n. 22, art.
+    223501, 2007. DOI: 10.1063/1.2737357.
+  url: https://doi.org/10.1063/1.2737357
+  tipo: artigo
+  acesso: "2026-10-09"
+  observacoes: >-
+    Versão de acesso aberto (arXiv) usada na leitura. Permeabilidade complexa
+    da ferrita MN80 medida por impedância de quatro pontos (p. 3).

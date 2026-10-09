@@ -17,7 +17,7 @@ O projeto responde a três perguntas:
 | Fase | Conteúdo | Situação |
 |---|---|---|
 | F0 | Requisitos e ambiente computacional | em andamento |
-| F1 | Base de dados dos materiais | base v0.1: 21 materiais, 150 registros |
+| F1 | Base de dados dos materiais | base v0.2: 24 materiais, 165 registros; extração assistida dos PDFs |
 | F2 | Verificação e validação dos modelos | caso analítico pronto |
 | F3 | Blindagem passiva no casco aberto | — |
 | F4 | Resposta e ruído em 4–100 Hz | — |
@@ -51,6 +51,9 @@ conda activate capacete-inteligente
 pip install -e .
 ```
 
+A extração de valores dos PDFs usa o `pdftotext` (poppler): já vem no ambiente
+conda; com venv, instale `poppler-utils` pelo gerenciador do sistema.
+
 Ou com venv (Python 3.11):
 
 ```bash
@@ -67,6 +70,8 @@ pytest -q                                   # todos os testes
 python -m capacete.requisitos               # resumo dos requisitos
 python -m capacete.requisitos --markdown docs/requisitos_v1.md
 python -m capacete.materiais --relatorio docs/materiais_cobertura.md
+python -m capacete.extracao extrair PASTA_DOS_PDFS     # candidatos para a base
+python -m capacete.extracao importar resultados/extracao/candidatos.csv --revisor NOME
 python modelos/verificacao/verificacao_casca_esferica.py
 python modelos/verificacao/casca_multicamada.py          # verificação multicamada
 python modelos/verificacao/visualizar_casca_esferica.py   # gráficos didáticos
